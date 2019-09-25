@@ -89,10 +89,6 @@ Quat Quat::normalized() const {
 	return *this / length();
 }
 
-bool Quat::is_normalized() const {
-	return std::abs(length_squared() - 1.0) < 0.00001;
-}
-
 Quat Quat::inverse() const {
 	return Quat(-x, -y, -z, w);
 }
@@ -175,21 +171,6 @@ void Quat::get_axis_and_angle(Vector3 &r_axis, real_t &r_angle) const {
 	r_axis.z = z / ::sqrt(1 - w * w);
 }
 
-void Quat::set_axis_angle(const Vector3 &axis, const float angle) {
-	ERR_FAIL_COND(!axis.is_normalized());
-
-	real_t d = axis.length();
-	if (d == 0)
-		set(0, 0, 0, 0);
-	else {
-		real_t sin_angle = ::sin(angle * 0.5);
-		real_t cos_angle = ::cos(angle * 0.5);
-		real_t s = sin_angle / d;
-		set(axis.x * s, axis.y * s, axis.z * s,
-				cos_angle);
-	}
-}
-
 Quat Quat::operator*(const Vector3 &v) const {
 	return Quat(w * v.x + y * v.z - z * v.y,
 			w * v.y + z * v.x - x * v.z,
@@ -266,10 +247,10 @@ void Quat::operator-=(const Quat &q) {
 }
 
 void Quat::operator*=(const Quat &q) {
-	set(w * q.x + x * q.w + y * q.z - z * q.y,
-			w * q.y + y * q.w + z * q.x - x * q.z,
-			w * q.z + z * q.w + x * q.y - y * q.x,
-			w * q.w - x * q.x - y * q.y - z * q.z);
+	x *= q.x;
+	y *= q.y;
+	z *= q.z;
+	w *= q.w;
 }
 
 void Quat::operator*=(const real_t &s) {

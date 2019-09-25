@@ -31,10 +31,6 @@ public:
 
 	bool is_empty() const;
 
-	NodePath get_as_property_path() const;
-
-	String get_concatenated_subnames() const;
-
 	operator String() const;
 
 	void operator=(const NodePath &other);
